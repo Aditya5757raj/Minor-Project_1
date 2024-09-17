@@ -1,0 +1,22 @@
+{
+  "name": "cca-project",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">",
+  "main": "login.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.3",
+    "parser": "^0.1.4",
+    "path": "^0.12.7"
+  }
+}

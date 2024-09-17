@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classroom Booking System - UPES</title>
+    <style>
+        /* Apply modern font */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://preview.redd.it/ugifevsserhd1.jpg?width=640&crop=smart&auto=webp&s=e4dad105b0a3a175026032384dcd968d1ed0a112') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
+        }
+    
+        /* Modernize the header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.75); /* Darker with more transparency */
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow for header */
+        }
+    
+        header img {
+            width: 120px;
+        }
+    
+        header .login a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            padding-bottom: 5px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease-in-out;
+        }
+    
+        header .login a:hover {
+            border-bottom: 2px solid #007bff;
+            color: #007bff;
+        }
+    
+        /* Main content style */
+        .content {
+            display: flex;
+            padding: 30px;
+            gap: 30px;
+        }
+    
+        .sidebar, .main-content {
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15); /* Soft shadow for modern look */
+            padding: 30px;
+            backdrop-filter: blur(5px); /* Add a subtle blur effect */
+        }
+    
+        /* Sidebar room availability */
+        .sidebar {
+            width: 30%;
+            background: url('https://www.dgicommunications.com/wp-content/uploads/2023/01/college-classroom-design-ideas.jpg') no-repeat center center;
+            background-size: cover;
+            background-color: rgba(255, 255, 255, 0.9); /* Overlay to make text visible */
+            color: #fff; /* Ensure text stands out against background */
+        }
+    
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 22px;
+            font-weight: 600;
+        }
+    
+        .sidebar label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #fff;
+        }
+    
+        .sidebar select, .sidebar input {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* Subtle inner shadow */
+            transition: all 0.3s ease-in-out;
+        }
+    
+        .sidebar select:hover, .sidebar input:hover {
+            border-color: #007bff;
+        }
+    
+        .main-content {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly more transparent */
+        }
+    
+        /* Classroom list style */
+        .classroom-list {
+            margin-bottom: 30px;
+        }
+    
+        .classroom-item {
+            border-bottom: 1px solid #ddd;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    
+        .classroom-item h4 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 500;
+            color: #007bff;
+        }
+    
+        .classroom-item span {
+            font-size: 16px;
+            color: #555;
+        }
+    
+        /* Modernize booking box */
+        .booking-box {
+            background: url('https://lh3.googleusercontent.com/p/AF1QipM_4jaLm_LxY-kBMeC2rseLBuLydAselwkE8HA=s1360-w1360-h1020') no-repeat center center fixed;
+            background-size: cover;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Modern shadow */
+            color: white;
+            background-color: rgba(0, 0, 0, 0.65); /* Transparent dark overlay */
+        }
+    
+        .booking-box input, .booking-box select, .booking-box textarea {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            background: rgba(255, 255, 255, 0.8); /* Subtle transparency for inputs */
+            color: #333;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+    
+        .booking-box button {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+    
+        .booking-box button:hover {
+            background-color: #0056b3;
+        }
+    
+        /* Footer styling */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); /* Shadow for footer */
+        }
+    
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+    
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        /* Modernize booking box */
+.booking-box {
+    background: url('https://lh3.googleusercontent.com/p/AF1QipM_4jaLm_LxY-kBMeC2rseLBuLydAselwkE8HA=s1360-w1360-h1020') no-repeat center center fixed;
+    background-size: cover;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Modern shadow */
+    color: black; /* Text color changed to black for better visibility */
+    background-color: rgba(255, 255, 255, 0.8); /* Transparent white overlay */
+    max-width: 100%; /* Ensure the div fits within the available space */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+/* Style adjustments for form elements */
+.booking-box input, .booking-box select, .booking-box textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    background: rgba(255, 255, 255, 0.9); /* Slightly more opaque for better readability */
+    color: #333;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Style for submit button */
+.booking-box button {
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.booking-box button:hover {
+    background-color: #0056b3;
+}
+
+    </style>
+    
+</head>
+<body>
+
+    <!-- Header -->
+<header>
+    <a href="https://www.upes.ac.in/" target="_blank" title="Visit UPES University">
+        <img src="https://indiaeducationdiary.in/wp-content/uploads/2022/01/UPES-LOGO-01.jpg" alt="UPES University Logo">
+    </a>
+    <div class="login">
+        <a href="#">Login</a>
+        <a href="#">User Profile</a>
+        <a href="#">Notifications</a>
+    </div>
+</header>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Sidebar Room Availability -->
+        <div class="sidebar">
+            <h3>Room Availability</h3>
+            <label for="time-slot">Time Slot</label>
+            <select id="time-slot">
+                <option value="08:00-09:00">8:00 AM - 9:00 AM</option>
+                <option value="09:00-10:00">9:00 AM - 10:00 AM</option>
+                <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
+                <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
+                <option value="12:00-01:00">12:00 PM - 1:00 PM</option>
+                <option value="01:00-02:00">1:00 PM - 2:00 PM</option>
+                <option value="02:00-03:00">2:00 PM - 3:00 PM</option>
+                <option value="03:00-04:00">3:00 PM - 4:00 PM</option>
+                <option value="04:00-05:00">4:00 PM - 5:00 PM</option>
+                <option value="05:00-06:00">5:00 PM - 6:00 PM</option>
+            </select>
+
+            <label for="block">Block</label>
+            <select id="block">
+                <option value="1">Block 1</option>
+                <option value="2">Block 2</option>
+                <option value="3">Block 3</option>
+                <option value="4">Block 4</option>
+                <option value="5">Block 5</option>
+                <option value="6">Block 6</option>
+                <option value="7">Block 7</option>
+                <option value="8">Block 8</option>
+                <option value="9">Block 9</option>
+                <option value="10">Block 10</option>
+                <option value="11">Block 11</option>
+            </select>
+
+            <button onclick="findAvailableRooms()">Find Available Rooms</button>
+        </div>
+
+        <div class="main-content">
+            <!-- Classroom List -->
+            <div class="classroom-list" id="classroom-list">
+                <!-- Available classrooms will be dynamically added here -->
+            </div>
+        
+            <!-- Booking Box -->
+            <div class="booking-box">
+                <h3>Booking Details</h3>
+                <form id="booking-form">
+                    <div class="form-group">
+                        <label for="booking-date">Date</label>
+                        <input type="date" id="booking-date" placeholder="Select Date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-time-from">Start Time</label>
+                        <input type="time" id="booking-time-from" placeholder="Start Time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="booking-time-to">End Time</label>
+                        <input type="time" id="booking-time-to" placeholder="End Time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duration (hours)</label>
+                        <input type="number" id="duration" placeholder="Duration (in hours)" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="purpose">Purpose</label>
+                        <input type="text" id="purpose" placeholder="Purpose of Booking" >
+                    </div>
+                    <button type="submit">Submit Booking</button>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 UPES University. All rights reserved.</p>
+        <p><a href="https://www.upes.ac.in/upes-privacy-policy">Terms of Use</a> | <a href="https://www.upes.ac.in/upes-privacy-policy">Privacy Policy</a> | <a href="https://www.upes.ac.in/contact">Contact Us</a></p>
+    </footer>
+
+    <script>
+        // JavaScript to fetch and display available rooms
+        async function findAvailableRooms() {
+            const timeSlot = document.getElementById('time-slot').value;
+            const block = document.getElementById('block').value;
+            const classroomList = document.getElementById('classroom-list');
+
+            // Simulating fetching available rooms
+            const availableRooms = [
+                { room: "101", block: block },
+                { room: "102", block: block },
+                { room: "201", block: block },
+            ];
+
+            classroomList.innerHTML = '';  // Clear existing rooms
+            availableRooms.forEach(room => {
+                const roomElement = document.createElement('div');
+                roomElement.classList.add('classroom-item');
+                roomElement.innerHTML = <h4>Room ${room.room}</h4><span>Block: ${room.block}</span>;
+                classroomList.appendChild(roomElement);
+            });
+        }
+
+        function submitBooking() {
+            alert('Booking Submitted');
+        }
+    </script>
+</body>
+</html>

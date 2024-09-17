@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./login.css">
+    <title>Login Portal</title>
+</head>
+<body>
+    <div id="container" class="container">
+        <div class="row">
+            <!-- Student Sign-in Form -->
+            <form class="col align-items-center flex-col sign-up" action="/login" method="post">
+                <div class="form-wrapper align-items-center">
+                    <div class="form sign-up">
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input id="username" type="text" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" name="password" placeholder="Password" id="password" required>
+                        </div>
+                        <!-- Hidden input field to specify role as 'student' -->
+                        <input type="hidden" name="role" value="student">
+                        <input type="submit" value="Sign in as Student">
+                        <p>
+                            <span>Already have an account?</span>
+                            <b onclick="toggle()" class="pointer">Sign in for Faculty</b> <!-- Toggle to Faculty -->
+                        </p>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Faculty Sign-in Form -->
+            <form class="col align-items-center flex-col sign-in" action="/login" method="post"> <!-- Add the form tag -->
+                <div class="form-wrapper align-items-center">
+                    <div class="form sign-in">
+                        <div class="input-group">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" name="username" placeholder="Username" required>
+                        </div>
+                        <div class="input-group">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" name="password" placeholder="Password" required>
+                        </div>
+                        <!-- Hidden input field to specify role as 'faculty' -->
+                        <input type="hidden" name="role" value="faculty">
+                        <button type="submit">Sign in as Faculty</button>
+                        <p>
+                            <b>Forgot password?</b>
+                        </p>
+                        <p>
+                            <span>///</span>
+                            <b onclick="toggle()" class="pointer">Sign in for Students</b> <!-- Toggle to Students -->
+                        </p>
+                    </div>
+                </div>
+            </form>
+            <!-- END SIGN IN -->
+        </div>
+        <!-- END FORM SECTION -->
+
+        <!-- CONTENT SECTION -->
+        <div class="row content-row">
+            <!-- SIGN IN CONTENT -->
+            <div class="col align-items-center flex-col">
+                <div class="text sign-in">
+                    <h2>Welcome Students and Faculty</h2>
+                </div>
+                <div class="img sign-in"></div>
+            </div>
+            <div class="col align-items-center flex-col">
+                <div class="img sign-up"></div>
+                <div class="text sign-up">
+                    <h2>UPES</h2>
+                    <h2>Student Portal</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <script src="./login.js"></script>
+</body>
+</html>
