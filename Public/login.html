@@ -24,6 +24,10 @@
                         <!-- Hidden input field to specify role as 'student' -->
                         <input type="hidden" name="role" value="student">
                         <input type="submit" value="Sign in as Student">
+                        <!-- Added Forgot Password link for students -->
+                        <p>
+                            <b onclick="forgotPassword('student')" class="pointer">Forgot password?</b>
+                        </p>
                         <p>
                             <span>Already have an account?</span>
                             <b onclick="toggle()" class="pointer">Sign in for Faculty</b> <!-- Toggle to Faculty -->
@@ -48,7 +52,7 @@
                         <input type="hidden" name="role" value="faculty">
                         <button type="submit">Sign in as Faculty</button>
                         <p>
-                            <b>Forgot password?</b>
+                            <b onclick="forgotPassword('faculty')" class="pointer">Forgot password?</b>
                         </p>
                         <p>
                             <span>///</span>

@@ -244,48 +244,55 @@
 
     <!-- Main Content -->
     <div class="content">
-        <!-- Sidebar Room Availability -->
         <div class="sidebar">
-            <h3>Room Availability</h3>
-            <label for="time-slot">Time Slot</label>
-            <select id="time-slot">
-                <option value="08:00-09:00">8:00 AM - 9:00 AM</option>
-                <option value="09:00-10:00">9:00 AM - 10:00 AM</option>
-                <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
-                <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
-                <option value="12:00-01:00">12:00 PM - 1:00 PM</option>
-                <option value="01:00-02:00">1:00 PM - 2:00 PM</option>
-                <option value="02:00-03:00">2:00 PM - 3:00 PM</option>
-                <option value="03:00-04:00">3:00 PM - 4:00 PM</option>
-                <option value="04:00-05:00">4:00 PM - 5:00 PM</option>
-                <option value="05:00-06:00">5:00 PM - 6:00 PM</option>
-            </select>
-
-            <label for="block">Block</label>
-            <select id="block">
-                <option value="1">Block 1</option>
-                <option value="2">Block 2</option>
-                <option value="3">Block 3</option>
-                <option value="4">Block 4</option>
-                <option value="5">Block 5</option>
-                <option value="6">Block 6</option>
-                <option value="7">Block 7</option>
-                <option value="8">Block 8</option>
-                <option value="9">Block 9</option>
-                <option value="10">Block 10</option>
-                <option value="11">Block 11</option>
-            </select>
-
-            <button onclick="findAvailableRooms()">Find Available Rooms</button>
-        </div>
+            <form action="/search-room" method="GET">
+                <h3>Room Availability</h3>
+                <label for="timeslot">Time Slot</label>
+                <select id="timeslot" name="timeslot">
+                    <option value="08:00-09:00">8:00 AM - 9:00 AM</option>
+                    <option value="09:00-10:00">9:00 AM - 10:00 AM</option>
+                    <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
+                    <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
+                    <option value="12:00-01:00">12:00 PM - 1:00 PM</option>
+                    <option value="01:00-02:00">1:00 PM - 2:00 PM</option>
+                    <option value="02:00-03:00">2:00 PM - 3:00 PM</option>
+                    <option value="03:00-04:00">3:00 PM - 4:00 PM</option>
+                    <option value="04:00-05:00">4:00 PM - 5:00 PM</option>
+                    <option value="05:00-06:00">5:00 PM - 6:00 PM</option>
+                </select>
+        
+                <label for="block">Block</label>
+                <select id="block" name="block">
+                    <option value="1">Block 1</option>
+                    <option value="2">Block 2</option>
+                    <option value="3">Block 3</option>
+                    <option value="4">Block 4</option>
+                    <option value="5">Block 5</option>
+                    <option value="6">Block 6</option>
+                    <option value="7">Block 7</option>
+                    <option value="8">Block 8</option>
+                    <option value="9">Block 9</option>
+                    <option value="10">Block 10</option>
+                    <option value="11">Block 11</option>
+                </select>
+        
+                <label for="dayofweek">Day of the Week</label>
+                <select id="dayofweek" name="dayofweek">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                </select>
+        
+                <button type="submit">Find Available Rooms</button>
+            </form>
+        </div>        
 
         <div class="main-content">
-            <!-- Classroom List -->
             <div class="classroom-list" id="classroom-list">
-                <!-- Available classrooms will be dynamically added here -->
             </div>
-        
-            <!-- Booking Box -->
             <div class="booking-box">
                 <h3>Booking Details</h3>
                 <form id="booking-form">
@@ -302,8 +309,8 @@
                         <input type="time" id="booking-time-to" placeholder="End Time" required>
                     </div>
                     <div class="form-group">
-                        <label for="duration">Duration (hours)</label>
-                        <input type="number" id="duration" placeholder="Duration (in hours)" min="0" required>
+                        <label for="clasroom_no">Room</label>
+                        <input type="number" id="classroom_no" placeholder="Room_no" min="0" required>
                     </div>
                     <div class="form-group">
                         <label for="purpose">Purpose</label>
@@ -318,9 +325,10 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2024 UPES University. All rights reserved.</p>
+        <p>2024 Classroom Vacancy Management System. All Rights Reserved by <a href="#" class="copyright-link">Aditya Raj</a>.</p>
         <p><a href="https://www.upes.ac.in/upes-privacy-policy">Terms of Use</a> | <a href="https://www.upes.ac.in/upes-privacy-policy">Privacy Policy</a> | <a href="https://www.upes.ac.in/contact">Contact Us</a></p>
     </footer>
+    
 
     <script>
         // JavaScript to fetch and display available rooms
