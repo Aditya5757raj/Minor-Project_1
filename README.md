@@ -1,17 +1,7 @@
-Here’s an updated version of your README file with an attractive, professional, and organized presentation style to make it easier to read and visually engaging:
 
----
 
 # Classroom Vacancy Management System
 
-<div align="center">
-
-![GitHub repo size](https://img.shields.io/github/repo-size/Aditya5757raj/Minor-Project-1)  
-![GitHub stars](https://img.shields.io/github/stars/Aditya5757raj/Minor-Project-1?style=social)  
-![GitHub forks](https://img.shields.io/github/forks/Aditya5757raj/Minor-Project-1?style=social)  
-[![Twitter Follow](https://img.shields.io/twitter/follow/YourTwitterHandle?style=social)](https://twitter.com/intent/follow?screen_name=YourTwitterHandle)  
-
-</div>
 
 ## About the Project
 
@@ -118,6 +108,4 @@ For any questions or feedback, feel free to reach out:
 
 This project is open-source and free to use. Contributions are always welcome!  
 
----
 
-Let me know if you'd like to add any other sections or further customization! 😊
