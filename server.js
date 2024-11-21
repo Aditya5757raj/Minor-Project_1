@@ -1,6 +1,9 @@
 const express = require('express');
 const mysql = require('mysql2/promise'); // Use promise version of mysql2
 const bodyParser = require('body-parser');
+const schedule = require('node-schedule');
+const morgan = require('morgan');
+const fs = require('fs');
 const path = require('path');
 const app = express();
 require('dotenv').config();
@@ -18,7 +21,47 @@ const dbConfig = {
     database: process.env.DB_DATABASE,
     port: process.env.DB_PORT,
 };
+//LOG FILES CREATED BY THIS
+const logsDir = path.join(__dirname, 'logs');
+if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir);
+}
 
+// Setup morgan logging - Log to a file
+const logStream = fs.createWriteStream(path.join(logsDir, 'requests.log'), { flags: 'a' });
+app.use(morgan('combined', { stream: logStream }));
+const daysOfWeek1 = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+async function truncateBookingForPreviousDays() {
+    const connection = await mysql.createConnection(dbConfig);
+
+    try {
+        // Get the current day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
+        const currentDay = new Date().getDay();
+        console.log(`Current day (numeric): ${currentDay} - ${daysOfWeek1[currentDay]}`);
+
+        // Loop through all previous days and delete bookings for them
+        for (let i = 1; i <= currentDay; i++) {
+            // Calculate the previous day
+            const previousDay = (currentDay - i + 7) % 7;  // Wrap around using modulus to handle the previous days correctly (including Sunday)
+
+            console.log(`Truncating bookings for day: ${daysOfWeek1[previousDay]}`);
+
+            // Query to delete bookings for the previous day
+            const [result] = await connection.execute(`
+                DELETE FROM Booking WHERE day_of_week = ?;
+            `, [daysOfWeek1[previousDay]]);
+
+            console.log(`Successfully deleted bookings for day ${daysOfWeek1[previousDay]}`);
+        }
+    } catch (error) {
+        console.error('Error truncating bookings for the previous days:', error);
+    } finally {
+        connection.end();
+    }
+}
+
+truncateBookingForPreviousDays();
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Public', 'index.html'), (err) => {
         if (err) {
@@ -42,7 +85,7 @@ app.get('/', (req, res) => {
 
             const availableRoomsQuery = `
                 SELECT 
-                    c.room_number
+                    DISTINCT  c.room_number
                 FROM 
                     Classrooms c
                 JOIN 
@@ -51,12 +94,30 @@ app.get('/', (req, res) => {
                     c.block = ?  -- Filter by block
                     AND c.available = TRUE  
                     AND ts.start_time <= ?  
-                    AND ts.end_time >= ?;  
+                    AND ts.end_time >= ?
+                    AND c.room_number NOT IN (
+                        SELECT room_number
+                        FROM Booking
+                        WHERE 
+                            start_time = ?
+                            AND end_time = ?
+                            AND day_of_week = ?
+                    ); 
             `;
 
             try {
                 // Execute the query using db.query
-                const [result] = await db.query(availableRoomsQuery, [dayofweek, block, startTime, endTime]);
+                const [result] = await db.query(availableRoomsQuery, [
+                    dayofweek,
+                    block,
+                    startTime,
+                    endTime,
+                    startTime,
+                    endTime,
+                    dayofweek
+                ]);
+                console.log(result);
+                
                 if (result.length > 0) {
                     let classroomsHtml = `
                         <div class="available-classrooms">
@@ -245,8 +306,10 @@ res.send(`
             }
         });
 
+
+        
         // POST route for handling login requests
-        app.post('/login', async (req, res) => {
+    app.post('/login', async (req, res) => {
             const { username, password, role } = req.body;
 
             // Query to check if the user exists with the correct role and password
@@ -266,14 +329,129 @@ res.send(`
                 res.status(500).send('An error occurred while processing your login request.');
             }
         });
+       app.post('/book-room', async (req, res) => {
+    const {roomNumber, block, timeslot, purpose, dayofweek } = req.body;
+     console.log(roomNumber+block+timeslot+purpose+dayofweek);
+    // Validate input
+    if (!roomNumber || !block || !timeslot || !purpose || !dayofweek) {
+        return res.status(400).send('All fields are required.');
+    }
 
-         // Listen on port 3000 or another port of your choice
+    const [startTime, endTime] = timeslot.split('-');
+
+    // Query to check room availability and existing bookings
+    const checkRoomQuery = `
+        SELECT room_number 
+        FROM Classrooms 
+        WHERE block = ? AND available = TRUE;
+    `;
+    const checkBookingQuery = `
+        SELECT * 
+        FROM Booking 
+        WHERE room_number = ? 
+        AND block = ? 
+        AND day_of_week = ? 
+        AND (
+            (start_time= ? AND end_time = ?) -- Overlapping bookings
+        );
+    `;
+    const bookRoomQuery = `
+        INSERT INTO Booking (room_number, block, day_of_week, start_time, end_time, purpose) 
+        VALUES (?, ?, ?, ?, ?, ?);
+    `;
+
+    try {
+        // Check if room exists and is available
+        const [availableRooms] = await db.query(checkRoomQuery, [block]);
+        const roomExists = availableRooms.some(room => room.room_number === roomNumber);
+
+        if (!roomExists) {
+            return res.sendFile(path.join(__dirname, "Roomnotavailable.html"));
+        }
+
+        // Check if room is already booked
+        const [existingBookings] = await db.query(checkBookingQuery, [roomNumber, block, dayofweek, startTime, endTime]);
+
+        if (existingBookings.length > 0) {
+            return res.sendFile(path.join(__dirname, "Bookingconflict.html"));
+        }
+
+        // Book the room
+        await db.query(bookRoomQuery, [roomNumber, block, dayofweek, startTime, endTime, purpose]);
+
+        // Respond with confirmation
+        res.send(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Booking Confirmed</title>
+                <style>
+                    body {
+                        font-family: 'Arial', sans-serif;
+                        background-image: url('https://collegewaale.com/upes/wp-content/uploads/2023/12/upes-1-1024x768.webp');
+                        background-size: cover;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 50px auto;
+                        padding: 20px;
+                        background: rgba(255, 255, 255, 0.8);
+                        border-radius: 10px;
+                        text-align: center;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                    }
+                    h1 {
+                        color: #2ecc71;
+                    }
+                    p {
+                        font-size: 18px;
+                        color: #333;
+                    }
+                    .button {
+                        display: inline-block;
+                        margin-top: 20px;
+                        padding: 10px 20px;
+                        background: #3498db;
+                        color: white;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        transition: background 0.3s;
+                    }
+                    .button:hover {
+                        background: #2980b9;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Booking Confirmed!</h1>
+                    <p>Your booking for Room ${roomNumber} in Block ${block} on ${dayofweek} from ${startTime} to ${endTime} has been successfully recorded.</p>
+                    <a href="action.html" class="button">Return to Home</a>
+                </div>
+            </body>
+            </html>
+        `);
+    } catch (error) {
+        console.error('Error processing booking:', error.stack);
+        res.status(500).send('An error occurred while booking the room.');
+    }
+});
+
+        
+        
+        // Listen on port 3000 or another port of your choice
         app.listen(3000, () => {
             console.log('Server running on http://localhost:3000');
         });
+        
 
-    } catch (err) {
+    } 
+    catch (err) {
         console.error('Error connecting to MySQL:', err.message);
-    }
-
+    }
+    
 })();

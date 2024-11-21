@@ -5,26 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Classroom Booking System - UPES</title>
     <style>
-        /* Apply modern font */
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url('https://preview.redd.it/ugifevsserhd1.jpg?width=640&crop=smart&auto=webp&s=e4dad105b0a3a175026032384dcd968d1ed0a112') no-repeat center center fixed;
-            background-size: cover;
-            color: #333;
-        }
-    
-        /* Modernize the header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background: rgba(0, 0, 0, 0.75); /* Darker with more transparency */
-            color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Soft shadow for header */
-        }
+       
+        
     
         header img {
             width: 120px;
@@ -128,8 +110,7 @@
     
         /* Modernize booking box */
         .booking-box {
-            background: url('https://lh3.googleusercontent.com/p/AF1QipM_4jaLm_LxY-kBMeC2rseLBuLydAselwkE8HA=s1360-w1360-h1020') no-repeat center center fixed;
-            background-size: cover;
+           
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* Modern shadow */
@@ -224,6 +205,150 @@
 .booking-box button:hover {
     background-color: #0056b3;
 }
+body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: url('https://lh3.googleusercontent.com/p/AF1QipM_4jaLm_LxY-kBMeC2rseLBuLydAselwkE8HA=s1360-w1360-h1020') no-repeat center center fixed;
+        background-size: cover;
+        color: #fff; /* Ensure text stands out against the background */
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        background: rgba(0, 0, 0, 0.85); /* Darker background for better contrast */
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar {
+        width: 30%;
+        background: rgba(0, 0, 0, 0.7); /* Darker overlay for better text visibility */
+        color: #fff;
+    }
+
+    .main-content {
+        flex: 1;
+        background-color: rgba(0, 0, 0, 0.7); /* Darker background for better contrast */
+        color: #fff; /* Ensure text is white for visibility */
+    }
+
+    .classroom-item h4, .classroom-item span {
+        color: #fff; /* Make the room details visible */
+    }
+
+    .booking-box {
+        background-color: rgba(0, 0, 0, 0.75); /* Darker overlay for better readability */
+        color: #fff;
+    }
+
+    .booking-box input, .booking-box select, .booking-box textarea {
+        background: rgba(255, 255, 255, 0.9); /* Slight opacity for inputs */
+        color: #333; /* Ensure input text is readable */
+    }
+
+    footer {
+        background: rgba(0, 0, 0, 0.85); /* Darker background for footer */
+        color: #fff;
+    }
+    /* Main content container */
+.main-content {
+    display: contents;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f9f9f9;
+    gap: 20px;
+}
+
+
+/* Booking box styling */
+.booking-box {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+
+
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .classroom-list,
+    .booking-box {
+        width: 100%;
+    }
+}
+.booking-box {
+        display: flex;
+        flex-direction: column; /* Stack the items vertically */
+        align-items: stretch; /* Stretch children to fill the width */
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        background-color: rgba(0, 0, 0, 0.75); /* Darker overlay for better readability */
+        color: white;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+        display: flex; /* Use flexbox for alignment */
+        flex-direction: column; /* Stack label and input vertically */
+    }
+
+    label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 5px;
+        color: #fff; /* Ensure label is visible */
+    }
+
+    input[type="date"],
+    input[type="time"],
+    input[type="number"],
+    input[type="text"],
+    select {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
 
     </style>
     
@@ -236,7 +361,6 @@
         <img src="https://indiaeducationdiary.in/wp-content/uploads/2022/01/UPES-LOGO-01.jpg" alt="UPES University Logo">
     </a>
     <div class="login">
-        <a href="#">Login</a>
         <a href="#">User Profile</a>
         <a href="#">Notifications</a>
     </div>
@@ -295,31 +419,62 @@
             </div>
             <div class="booking-box">
                 <h3>Booking Details</h3>
-                <form id="booking-form">
+                <form id="booking-form" method="post" action="/book-room">
                     <div class="form-group">
-                        <label for="booking-date">Date</label>
-                        <input type="date" id="booking-date" placeholder="Select Date" required>
+                        <label for="dayofweek">Day of the Week</label>
+                        <select id="dayofweek" name="dayofweek">
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                        </select>        
                     </div>
                     <div class="form-group">
-                        <label for="booking-time-from">Start Time</label>
-                        <input type="time" id="booking-time-from" placeholder="Start Time" required>
+                        <label for="purpose">purpose</label>
+                        <input type="text" placeholder="purpose" name="purpose">
                     </div>
                     <div class="form-group">
-                        <label for="booking-time-to">End Time</label>
-                        <input type="time" id="booking-time-to" placeholder="End Time" required>
+                        <label for="classroom_no">Room</label>
+                        <input type="number" id="classroom_no" placeholder="Room_no" name="roomNumber" required>
                     </div>
                     <div class="form-group">
-                        <label for="clasroom_no">Room</label>
-                        <input type="number" id="classroom_no" placeholder="Room_no" min="0" required>
+                        <label for="block">Block</label>
+                        <select id="block" name="block">
+                            <option value="1">Block 1</option>
+                            <option value="2">Block 2</option>
+                            <option value="3">Block 3</option>
+                            <option value="4">Block 4</option>
+                            <option value="5">Block 5</option>
+                            <option value="6">Block 6</option>
+                            <option value="7">Block 7</option>
+                            <option value="8">Block 8</option>
+                            <option value="9">Block 9</option>
+                            <option value="10">Block 10</option>
+                            <option value="11">Block 11</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="purpose">Purpose</label>
-                        <input type="text" id="purpose" placeholder="Purpose of Booking" >
+                        <label for="timeslot">Time Slot</label>
+                        <select id="timeslot" name="timeslot">
+                            <option value="08:00-09:00">8:00 AM - 9:00 AM</option>
+                            <option value="09:00-10:00">9:00 AM - 10:00 AM</option>
+                            <option value="10:00-11:00">10:00 AM - 11:00 AM</option>
+                            <option value="11:00-12:00">11:00 AM - 12:00 PM</option>
+                            <option value="12:00-01:00">12:00 PM - 1:00 PM</option>
+                            <option value="01:00-02:00">1:00 PM - 2:00 PM</option>
+                            <option value="02:00-03:00">2:00 PM - 3:00 PM</option>
+                            <option value="03:00-04:00">3:00 PM - 4:00 PM</option>
+                            <option value="04:00-05:00">4:00 PM - 5:00 PM</option>
+                            <option value="05:00-06:00">5:00 PM - 6:00 PM</option>
+                        </select>
                     </div>
                     <button type="submit">Submit Booking</button>
                 </form>
             </div>
         </div>
+        
         
     </div>
 
@@ -329,33 +484,5 @@
         <p><a href="https://www.upes.ac.in/upes-privacy-policy">Terms of Use</a> | <a href="https://www.upes.ac.in/upes-privacy-policy">Privacy Policy</a> | <a href="https://www.upes.ac.in/contact">Contact Us</a></p>
     </footer>
     
-
-    <script>
-        // JavaScript to fetch and display available rooms
-        async function findAvailableRooms() {
-            const timeSlot = document.getElementById('time-slot').value;
-            const block = document.getElementById('block').value;
-            const classroomList = document.getElementById('classroom-list');
-
-            // Simulating fetching available rooms
-            const availableRooms = [
-                { room: "101", block: block },
-                { room: "102", block: block },
-                { room: "201", block: block },
-            ];
-
-            classroomList.innerHTML = '';  // Clear existing rooms
-            availableRooms.forEach(room => {
-                const roomElement = document.createElement('div');
-                roomElement.classList.add('classroom-item');
-                roomElement.innerHTML = <h4>Room ${room.room}</h4><span>Block: ${room.block}</span>;
-                classroomList.appendChild(roomElement);
-            });
-        }
-
-        function submitBooking() {
-            alert('Booking Submitted');
-        }
-    </script>
 </body>
 </html>
