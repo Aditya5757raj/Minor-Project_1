@@ -36,32 +36,35 @@ async function truncateBookingForPreviousDays() {
     const connection = await mysql.createConnection(dbConfig);
 
     try {
-        // Get the current day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
+        // Get the current day of the week
         const currentDay = new Date().getDay();
         console.log(`Current day (numeric): ${currentDay} - ${daysOfWeek1[currentDay]}`);
 
-        // Loop through all previous days and delete bookings for them
+        // Loop through all previous days
         for (let i = 1; i <= currentDay; i++) {
             // Calculate the previous day
-            const previousDay = (currentDay - i + 7) % 7;  // Wrap around using modulus to handle the previous days correctly (including Sunday)
+            const previousDay = (currentDay - i + 7) % 7; // Wrap around correctly
 
             console.log(`Truncating bookings for day: ${daysOfWeek1[previousDay]}`);
 
-            // Query to delete bookings for the previous day
+            // Delete bookings for the previous day
             const [result] = await connection.execute(`
                 DELETE FROM Booking WHERE day_of_week = ?;
             `, [daysOfWeek1[previousDay]]);
 
-            console.log(`Successfully deleted bookings for day ${daysOfWeek1[previousDay]}`);
+            console.log(`Deleted ${result.affectedRows} bookings for ${daysOfWeek1[previousDay]}`);
         }
     } catch (error) {
-        console.error('Error truncating bookings for the previous days:', error);
+        console.error('Error truncating bookings for previous days:', error.message);
     } finally {
-        connection.end();
+        await connection.end(); // Ensure the connection is properly closed
     }
 }
 
-truncateBookingForPreviousDays();
+// Execute the function
+truncateBookingForPreviousDays().catch((error) => {
+    console.error('Unhandled error in truncateBookingForPreviousDays:', error.message);
+});
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Public', 'index.html'), (err) => {
         if (err) {
@@ -330,87 +333,143 @@ app.get('/', (req, res) => {
             }
         });
 
-        //room booking post request
-        const bookingQueue = []; // In-memory queue for booking requests
+        const PriorityQueue = require('js-priority-queue'); // Use js-priority-queue for priority-based queue
 
-        app.post('/book-room', async (req, res) => {
-            const { roomNumber, block, timeslot, purpose, dayofweek } = req.body;
-        
-            // Validate input
-            if (!roomNumber || !block || !timeslot || !purpose || !dayofweek) {
-                return res.status(400).send('All fields are required.');
-            }
-        
-            const [startTime, endTime] = timeslot.split('-');
-        
-            const checkRoomQuery = `
-                SELECT room_number 
-                FROM Classrooms 
-                WHERE block = ? AND available = TRUE;
-            `;
-            const checkBookingQuery = `
-                SELECT * 
-                FROM Booking 
-                WHERE room_number = ? 
-                AND block = ? 
-                AND day_of_week = ? 
-                AND (
-                    (start_time= ? AND end_time = ?) -- Overlapping bookings
-                );
-            `;
-            const bookRoomQuery = `
-                INSERT INTO Booking (room_number, block, day_of_week, start_time, end_time, purpose) 
-                VALUES (?, ?, ?, ?, ?, ?);
-            `;
-        
-            // Add request to the queue with a timestamp
-            const request = {
-                roomNumber,
-                block,
-                startTime,
-                endTime,
-                purpose,
-                dayofweek,
-                timestamp: Date.now(),
-                res, // Save the response object for sending a response later
-            };
-        
-            bookingQueue.push(request);
-        
-            // Process the queue
+// In-memory queue for booking requests
+const bookingQueue = new PriorityQueue({
+    comparator: (a, b) => b.priority - a.priority, // Higher priority first
+});
+
+// Store rejection counts for low-priority requests
+const rejectionCounter = {};
+
+// Simplified priority calculation based on purpose
+function calculatePriority(purpose) {
+    const priorityMapping = {
+        'exam': 10,
+        'lecture': 8,
+        'meeting': 5,
+    };
+    return priorityMapping[purpose] || 1;
+}
+
+// Variables to manage batch processing
+let timeout; // Timer for timeout
+const BATCH_SIZE = 4; // Number of requests to process at a time
+const TIMEOUT_MS = 10000; // 10 seconds timeout
+
+// Room booking post request
+app.post('/book-room', async (req, res) => {
+    const { roomNumber, block, timeslot, purpose, dayofweek } = req.body;
+
+    // Validate input
+    if (!roomNumber || !block || !timeslot || !purpose || !dayofweek) {
+        return res.status(400).send('All fields are required.');
+    }
+
+    const [startTime, endTime] = timeslot.split('-');
+
+    const checkRoomQuery = `
+        SELECT room_number 
+        FROM Classrooms 
+        WHERE block = ? AND available = TRUE;
+    `;
+    const checkBookingQuery = `
+        SELECT * 
+        FROM Booking 
+        WHERE room_number = ? 
+        AND block = ? 
+        AND day_of_week = ? 
+        AND (
+            (start_time = ? AND end_time = ?) -- Overlapping bookings
+        );
+    `;
+    const bookRoomQuery = `
+        INSERT INTO Booking (room_number, block, day_of_week, start_time, end_time, purpose) 
+        VALUES (?, ?, ?, ?, ?, ?);
+    `;
+
+    // Add request to the queue with priority and timestamp
+    const request = {
+        roomNumber,
+        block,
+        startTime,
+        endTime,
+        purpose,
+        dayofweek,
+        timestamp: Date.now(),
+        priority: calculatePriority(purpose),
+        res, // Save the response object for sending a response later
+    };
+
+    // Add request to queue
+    bookingQueue.queue(request);
+
+    // Start timeout or process immediately if the batch is full
+    if (bookingQueue.length === 1) {
+        // Start the timeout if this is the first request in the batch
+        timeout = setTimeout(() => {
             processBookingQueue(checkRoomQuery, checkBookingQuery, bookRoomQuery);
-        });
-        
-        async function processBookingQueue(checkRoomQuery, checkBookingQuery, bookRoomQuery) {
-            if (bookingQueue.length === 0) return;
-        
-            // Get the first request from the queue
-            const currentRequest = bookingQueue.shift();
-        
-            const { roomNumber, block, startTime, endTime, purpose, dayofweek, timestamp, res } = currentRequest;
-        
-            try {
-                // Check if room exists and is available
-                const [availableRooms] = await db.query(checkRoomQuery, [block]);
-                const roomExists = availableRooms.some(room => room.room_number === roomNumber);
-        
-                if (!roomExists) {
-                    return res.sendFile(path.join(__dirname, "Roomnotavailable.html"));
-                }
-        
-                // Check if room is already booked
-                const [existingBookings] = await db.query(checkBookingQuery, [roomNumber, block, dayofweek, startTime, endTime]);
-        
-                if (existingBookings.length > 0) {
+        }, TIMEOUT_MS);
+    }
+
+    // If the batch is full, process immediately and clear the timer
+    if (bookingQueue.length >= BATCH_SIZE) {
+        clearTimeout(timeout); // Cancel the timer
+        processBookingQueue(checkRoomQuery, checkBookingQuery, bookRoomQuery);
+    }
+});
+
+async function processBookingQueue(checkRoomQuery, checkBookingQuery, bookRoomQuery) {
+    if (bookingQueue.length === 0) return;
+
+    // Process requests in batches
+    const batch = [];
+    while (batch.length < BATCH_SIZE && bookingQueue.length > 0) {
+        const currentRequest = bookingQueue.dequeue();
+        batch.push(currentRequest);
+    }
+
+    for (const currentRequest of batch) {
+        const { roomNumber, block, startTime, endTime, purpose, dayofweek, priority, res } = currentRequest;
+
+        try {
+            // Check if room exists and is available
+            const [availableRooms] = await db.query(checkRoomQuery, [block]);
+            const roomExists = availableRooms.some(room => room.room_number === roomNumber);
+
+            if (!roomExists) {
+                return res.sendFile(path.join(__dirname, "Roomnotavailable.html"));
+            }
+
+            // Check if room is already booked
+            const [existingBookings] = await db.query(checkBookingQuery, [roomNumber, block, dayofweek, startTime, endTime]);
+
+            if (existingBookings.length > 0) {
+                // Conflict detected, track rejection count
+                const conflictingPurpose = existingBookings[0].purpose;
+                const key = `${roomNumber}-${block}-${purpose}`;
+                rejectionCounter[key] = (rejectionCounter[key] || 0) + 1;
+
+                // If rejection count reaches 3, increase priority
+                if (rejectionCounter[key] >= 3 && calculatePriority(conflictingPurpose) > priority) {
+                    currentRequest.priority = calculatePriority(conflictingPurpose) + 1;
+                    // Re-add to the queue with updated priority
+                    bookingQueue.queue(currentRequest);
+                } else {
                     return res.sendFile(path.join(__dirname, "Bookingconflict.html"));
                 }
-        
-                // Book the room
+            } else {
+                // No conflict, book the room
                 await db.query(bookRoomQuery, [roomNumber, block, dayofweek, startTime, endTime, purpose]);
-        
-                // Respond with confirmation
+
+                // Clear rejection count for this request
+                const key = `${roomNumber}-${block}-${purpose}`;
+                delete rejectionCounter[key];
+
+                // Send success response
                 res.send(`
-                    <!DOCTYPE html>
+                       <!DOCTYPE html>
                     <html lang="en">
                     <head>
                         <meta charset="UTF-8">
@@ -463,18 +522,22 @@ app.get('/', (req, res) => {
                         </div>
                     </body>
                     </html>
+
                 `);
-            } catch (error) {
-                console.error('Error processing booking:', error.stack);
-                res.status(500).send('An error occurred while booking the room.');
             }
-        
-            // Process the next request in the queue
-            processBookingQueue(checkRoomQuery, checkBookingQuery, bookRoomQuery);
+        } catch (error) {
+            console.error('Error processing booking:', error);
+            res.status(500).send('An error occurred.');
         }
-        
+    }
 
-
+    // If there are more requests, start the timeout again
+    if (bookingQueue.length > 0) {
+        timeout = setTimeout(() => {
+            processBookingQueue(checkRoomQuery, checkBookingQuery, bookRoomQuery);
+        }, TIMEOUT_MS);
+    }
+}
 
         // Listen on port 3000 or another port of your choice
         app.listen(3000, () => {
