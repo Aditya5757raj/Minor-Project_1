@@ -1,111 +1,95 @@
+# 📌 Classroom Vacancy Management System
 
+## 🏫 About the Project
+The **Classroom Vacancy Management System** is designed to streamline and optimize the allocation of vacant classrooms in universities. It enables real-time booking and efficient resource management, ensuring that both students and faculty can find and reserve available classrooms without conflicts.
 
-# Classroom Vacancy Management System
+🔗 **[View Project on GitHub](https://github.com/Aditya5757raj/Minor-Project-1)**
 
+---
+## ✨ Features
+✅ **Real-Time Booking** - Book classrooms dynamically based on availability.
 
-## About the Project
+🔑 **Role-Based Access** - Different functionalities for students and faculty.
 
-The *Classroom Vacancy Management System* is a solution designed to optimize the allocation of vacant classrooms in universities. It simplifies classroom booking for students and faculty in real-time, promoting efficient resource utilization.  
+📊 **Enhanced Resource Management** - Optimize classroom usage and minimize scheduling conflicts.
 
-<a href="https://github.com/Aditya5757raj/Minor-Project-1"><strong>➥ View Project on GitHub</strong></a>  
+🔄 **Dynamic Updates** - View and manage classroom availability in real time.
+
+🖥 **User-Friendly Interface** - Simple and intuitive UI for seamless navigation.
 
 ---
 
-### Features  
-
-- 📅 *Real-Time Booking*: Book classrooms based on availability for specific time slots.  
-- 🏫 *Role-Based Access*: Separate functionalities for students and faculty.  
-- 🔄 *Dynamic Updates*: View and manage classroom availability in real-time.  
-- 📊 *Enhanced Resource Management*: Optimize classroom utilization to minimize conflicts.  
-
----
-
-### Demo Screenshots  
-
-#### Classroom Management Demo  
-![Classroom Management Demo](https://indiaeducationdiary.in/wp-content/uploads/2022/01/UPES-LOGO-01.jpg "Classroom Management Demo")  
+## ⚙️ Prerequisites
+Ensure you have the following installed before setting up the project:
+- **Git**: Version control system
+- **Java JDK 11+**: Required for backend development
+- **Node.js**: If using Node.js for backend processing
+- **MySQL**: Database management system
 
 ---
+## 🚀 Installation and Setup
+Follow these steps to set up the project locally:
 
-### Prerequisites  
+1️⃣ **Clone the Repository:**
+```bash
+git clone https://github.com/Aditya5757raj/Minor-Project-1.git
+```
 
-Ensure you have the following tools installed:  
+2️⃣ **Navigate to the Project Directory:**
+```bash
+cd Minor-Project-1
+```
 
-- *[Git](https://git-scm.com/downloads)*: Version control system  
-- *[Java JDK 11+](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html)*: For backend development  
-- *[Node.js](https://nodejs.org/)*: If using Node.js for backend  
-- *[MySQL](https://www.mysql.com/)*: For database management  
+3️⃣ **Configure the Project:**
+Refer to `setup.md` for detailed configuration steps.
 
----
-
-### Installation and Setup  
-
-To get started with the project, follow these steps:  
-
-1. *Clone the Repository*:  
-
-   bash
-   git clone https://github.com/Aditya5757raj/Minor-Project-1.git
-     
-
-2. *Navigate to the Project Directory*:  
-
-   bash
-   cd Minor-Project-1
-     
-
-3. *Configure the Project*:  
-   Refer to the [setup.md](setup.md) file for detailed configuration steps.  
-
-4. *Run the Application*:  
-   Follow the instructions in the README.md or relevant project files to execute the application.  
+4️⃣ **Run the Application:**
+- Start the backend server:
+```bash
+node server.js
+```
+- Once the server starts, the application will be available locally at:
+```
+http://localhost:3000
+```
+Replace `PORT` with the actual port number specified in your configuration.
 
 ---
-
-### Technologies Used  
-
-- *Backend*: Java, Node.js  
-- *Database*: MySQL  
-- *Frontend*: HTML, CSS  
-- *Deployment*: AWS Elastic Beanstalk, EC2  
+## 🛠 Technologies Used
+- **Backend:** Java, Node.js
+- **Database:** MySQL
+- **Frontend:** HTML, CSS
+- **Deployment:** AWS Elastic Beanstalk, EC2
 
 ---
+## 🤝 How to Contribute
+We welcome contributions! Follow these steps to contribute:
 
-### How to Contribute  
+1️⃣ **Fork the repository**
 
-1. Fork the repository  
-2. Create a feature branch:  
+2️⃣ **Create a feature branch:**
+```bash
+git checkout -b feature-name
+```
 
-   bash
-   git checkout -b feature-name
-     
+3️⃣ **Commit your changes:**
+```bash
+git commit -m "Add feature-name"
+```
 
-3. Commit your changes:  
+4️⃣ **Push the branch:**
+```bash
+git push origin feature-name
+```
 
-   bash
-   git commit -m "Add feature-name"
-     
-
-4. Push the branch:  
-
-   bash
-   git push origin feature-name
-     
-
-5. Submit a pull request  
+5️⃣ **Submit a Pull Request (PR)**
 
 ---
-
-### Contact  
-
-For any questions or feedback, feel free to reach out:  
- 
-- *GitHub*: [Aditya5757raj](https://github.com/Aditya5757raj)  
+## 📬 Contact
+For any questions or feedback, feel free to reach out:
+- **GitHub:** [Aditya5757raj](https://github.com/Aditya5757raj)
 
 ---
-
-### License  
-
-This project is open-source and free to use. Contributions are always welcome!  
-
+## 📜 License
+This project is **open-source** and free to use. Contributions are always welcome! 🚀
 
